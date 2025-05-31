@@ -1,6 +1,6 @@
 run = "RAILS_ENV=development bundle exec rails server --binding=0.0.0.0"
 hidden = [".bundle"]
-entrypoint = "app/controllers/application_controller.rb"
+# entrypoint = "app/controllers/application_controller.rb"
 modules = ["ruby-3.2"]
 
 [env]
@@ -21,3 +21,4 @@ deploymentTarget = "gce"
 [[ports]]
 localPort = 3000
 externalPort = 80
+exposeLocalhost = true

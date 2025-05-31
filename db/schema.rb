@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_30_014659) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_31_020633) do
   create_table "movies", force: :cascade do |t|
     t.string "title"
     t.integer "excitement"
@@ -20,6 +20,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_30_014659) do
     t.integer "surprise"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "region"
+    t.string "format_type"
+    t.index ["format_type"], name: "index_movies_on_format_type"
+    t.index ["region"], name: "index_movies_on_region"
   end
 
 end
