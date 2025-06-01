@@ -32,6 +32,46 @@ class MoviesController < ApplicationController
 
     movies = Movie.where(region: params[:region], format_type: params[:format_type])
 
+    max_distance = 100**2 * 5
+
+    movies_with_scores = movies.map do |movie|
+      movie_emotions = [
+        movie.excitement,
+        movie.joy,
+        movie.fear,
+        movie.sadness,
+        movie.surprise
+      ]
+      distance = movie_emotions.zip(user_emotions).map { |m, u| (m - u)**2 }.sum
+      match_score = ((max_distance - distance) / max_distance.to_f * 100).round(2)
+
+      {
+        recommended_movies: movie,
+        match_score: match_score
+      }
+    end
+
+    sorted_movies = movies_with_scores.sort_by { |h| -h[:match_score] }
+
+    render json: sorted_movies.first(3), status: :ok
+  end
+
+  def random_recommend
+    emotions = {
+      excitement: rand(0..100),
+      joy: rand(0..100),
+      fear: rand(0..100),
+      sadness: rand(0..100),
+      surprise: rand(0..100)
+    }
+
+    region = Movie.distinct.pluck(:region).sample
+    format_type = Movie.distinct.pluck(:format_type).sample
+
+    user_emotions = emotions.values
+
+    movies = Movie.where(region: params[:region], format_type: params[:format_type])
+
     sorted_movies = movies.sort_by do |movie|
       movie_emotions = [
         movie.excitement,
@@ -43,7 +83,12 @@ class MoviesController < ApplicationController
       movie_emotions.zip(user_emotions).map { |m, u| (m - u)**2 }.sum
     end
 
-    render json: sorted_movies.first(3), status: :ok
+    render json: {
+      region: region,
+      format_type: format_type,
+      emotions: emotions,
+      recommended_movies: sorted_movies.first(3)
+    }, status: :ok
   end
 
   private
