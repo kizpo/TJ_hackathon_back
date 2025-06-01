@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
-  post '/movies/recommend', to: 'movies#recommend'
-  get '/movies/random_recommend', to: 'movies#random_recommend'
+  resources :movies do
+    collection do
+      post :recommend
+      get :random_recommend
+    end
+  end
 end
+

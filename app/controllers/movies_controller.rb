@@ -19,6 +19,11 @@ class MoviesController < ApplicationController
     end
   end
 
+  def destroy
+    @movie = Movie.find(params[:id])
+    @movie.destroy
+  end
+
   def recommend
     required_keys = %w[excitement joy fear sadness surprise]
     emotions_param = params[:emotions] || {}
@@ -70,7 +75,7 @@ class MoviesController < ApplicationController
 
     user_emotions = emotions.values
 
-    movies = Movie.where(region: params[:region], format_type: params[:format_type])
+    movies = Movie.where(region: region, format_type: format_type)
 
     sorted_movies = movies.sort_by do |movie|
       movie_emotions = [
